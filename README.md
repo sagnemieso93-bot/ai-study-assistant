@@ -55,7 +55,5 @@ This extension is useful for:
 
 ---
 
-## 📄 License
 
-MIT License
 
