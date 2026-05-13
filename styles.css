@@ -1,0 +1,541 @@
+/* ============================================================
+   AI Study Assistant — Injected Stylesheet
+   Design: Dark terminal aesthetic, inspired by code editors
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --asa-bg: #0d1117;
+  --asa-surface: #161b22;
+  --asa-surface2: #1f2937;
+  --asa-border: #30363d;
+  --asa-accent: #58a6ff;
+  --asa-accent2: #3fb950;
+  --asa-accent3: #f0883e;
+  --asa-accent4: #ff7b72;
+  --asa-text: #e6edf3;
+  --asa-text-muted: #8b949e;
+  --asa-text-dim: #484f58;
+  --asa-user-bg: #1a3a5c;
+  --asa-ai-bg: #1a2332;
+  --asa-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  --asa-radius: 12px;
+  --asa-font: 'Syne', sans-serif;
+  --asa-mono: 'JetBrains Mono', monospace;
+  --asa-width: 440px;
+  --asa-z: 999999;
+}
+
+/* ── Toggle Button ─────────────────────────────────────────── */
+#asa-toggle-btn {
+  position: fixed !important;
+  bottom: 32px !important;
+  right: 32px !important;
+  z-index: var(--asa-z) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: linear-gradient(135deg, #1a3a5c, #0d2137) !important;
+  border: 1px solid var(--asa-accent) !important;
+  color: var(--asa-accent) !important;
+  font-family: var(--asa-font) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 20px rgba(88, 166, 255, 0.25) !important;
+  transition: all 0.2s ease !important;
+  letter-spacing: 0.5px !important;
+}
+
+#asa-toggle-btn:hover {
+  background: linear-gradient(135deg, #1f4a7a, #132840) !important;
+  box-shadow: 0 6px 28px rgba(88, 166, 255, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+#asa-toggle-btn.asa-toggle-active {
+  background: linear-gradient(135deg, var(--asa-accent), #1a5fb4) !important;
+  color: white !important;
+}
+
+/* ── Sidebar Container ─────────────────────────────────────── */
+#asa-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: var(--asa-width) !important;
+  height: 100vh !important;
+  z-index: calc(var(--asa-z) - 1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--asa-bg) !important;
+  border-left: 1px solid var(--asa-border) !important;
+  box-shadow: var(--asa-shadow) !important;
+  font-family: var(--asa-font) !important;
+  font-size: 14px !important;
+  color: var(--asa-text) !important;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+}
+
+#asa-sidebar.asa-hidden {
+  transform: translateX(100%) !important;
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.asa-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 20px !important;
+  background: var(--asa-surface) !important;
+  border-bottom: 1px solid var(--asa-border) !important;
+  flex-shrink: 0 !important;
+}
+
+.asa-header-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  overflow: hidden !important;
+}
+
+.asa-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.asa-logo-icon {
+  font-size: 18px !important;
+}
+
+.asa-logo-text {
+  font-family: var(--asa-font) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--asa-accent) !important;
+  letter-spacing: 0.3px !important;
+}
+
+.asa-problem-badge {
+  background: var(--asa-surface2) !important;
+  border: 1px solid var(--asa-border) !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  font-size: 11px !important;
+  color: var(--asa-text-muted) !important;
+  font-family: var(--asa-mono) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 180px !important;
+}
+
+.asa-close-btn {
+  background: none !important;
+  border: 1px solid transparent !important;
+  color: var(--asa-text-muted) !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s !important;
+  flex-shrink: 0 !important;
+}
+
+.asa-close-btn:hover {
+  border-color: var(--asa-border) !important;
+  color: var(--asa-text) !important;
+  background: var(--asa-surface2) !important;
+}
+
+/* ── API Warning ───────────────────────────────────────────── */
+.asa-api-warning {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 20px !important;
+  background: rgba(240, 136, 62, 0.15) !important;
+  border-bottom: 1px solid rgba(240, 136, 62, 0.3) !important;
+  font-size: 12px !important;
+  color: var(--asa-accent3) !important;
+  flex-shrink: 0 !important;
+}
+
+.asa-link-btn {
+  background: none !important;
+  border: 1px solid var(--asa-accent3) !important;
+  color: var(--asa-accent3) !important;
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-family: var(--asa-font) !important;
+  transition: all 0.15s !important;
+}
+
+.asa-link-btn:hover {
+  background: rgba(240, 136, 62, 0.2) !important;
+}
+
+/* ── Chat Area ─────────────────────────────────────────────── */
+.asa-chat-area {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  scroll-behavior: smooth !important;
+}
+
+.asa-chat-area::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+.asa-chat-area::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.asa-chat-area::-webkit-scrollbar-thumb {
+  background: var(--asa-border) !important;
+  border-radius: 2px !important;
+}
+
+/* ── Welcome Screen ────────────────────────────────────────── */
+.asa-welcome {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  flex: 1 !important;
+  gap: 12px !important;
+  padding: 40px 20px !important;
+}
+
+.asa-welcome-icon {
+  font-size: 48px !important;
+  filter: drop-shadow(0 0 12px rgba(88,166,255,0.4)) !important;
+}
+
+.asa-welcome h3 {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--asa-text) !important;
+  margin: 0 !important;
+}
+
+.asa-welcome p {
+  font-size: 13px !important;
+  color: var(--asa-text-muted) !important;
+  margin: 0 !important;
+  line-height: 1.6 !important;
+}
+
+/* ── Messages ──────────────────────────────────────────────── */
+.asa-message {
+  display: flex !important;
+  gap: 10px !important;
+  align-items: flex-start !important;
+  animation: asa-fadein 0.25s ease !important;
+}
+
+@keyframes asa-fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.asa-message-user {
+  flex-direction: row-reverse !important;
+}
+
+.asa-message-avatar {
+  font-size: 18px !important;
+  width: 30px !important;
+  height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background: var(--asa-surface2) !important;
+  border: 1px solid var(--asa-border) !important;
+  flex-shrink: 0 !important;
+}
+
+.asa-message-bubble {
+  max-width: calc(100% - 50px) !important;
+  padding: 12px 14px !important;
+  border-radius: var(--asa-radius) !important;
+  line-height: 1.65 !important;
+  font-size: 13px !important;
+}
+
+.asa-message-ai .asa-message-bubble {
+  background: var(--asa-ai-bg) !important;
+  border: 1px solid var(--asa-border) !important;
+  border-top-left-radius: 4px !important;
+  color: var(--asa-text) !important;
+}
+
+.asa-message-user .asa-message-bubble {
+  background: var(--asa-user-bg) !important;
+  border: 1px solid rgba(88,166,255,0.2) !important;
+  border-top-right-radius: 4px !important;
+  color: var(--asa-text) !important;
+}
+
+.asa-system-msg {
+  text-align: center !important;
+  font-size: 12px !important;
+  color: var(--asa-text-muted) !important;
+  padding: 6px 12px !important;
+  background: var(--asa-surface2) !important;
+  border-radius: 20px !important;
+  width: fit-content !important;
+  align-self: center !important;
+  border: 1px solid var(--asa-border) !important;
+}
+
+/* ── Loading Bubble ────────────────────────────────────────── */
+.asa-loading-bubble {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.asa-dot {
+  width: 7px !important;
+  height: 7px !important;
+  background: var(--asa-accent) !important;
+  border-radius: 50% !important;
+  animation: asa-bounce 1.2s infinite ease-in-out !important;
+}
+
+.asa-dot:nth-child(2) { animation-delay: 0.2s !important; }
+.asa-dot:nth-child(3) { animation-delay: 0.4s !important; }
+
+@keyframes asa-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+  40%           { transform: scale(1);   opacity: 1;   }
+}
+
+.asa-loading-text {
+  font-size: 12px !important;
+  color: var(--asa-text-muted) !important;
+  font-style: italic !important;
+  margin-left: 4px !important;
+}
+
+/* ── Markdown Rendering ────────────────────────────────────── */
+.asa-message-bubble .asa-md-h2 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: var(--asa-accent) !important;
+  margin: 14px 0 6px !important;
+  border-bottom: 1px solid var(--asa-border) !important;
+  padding-bottom: 4px !important;
+  font-family: var(--asa-font) !important;
+}
+
+.asa-message-bubble .asa-md-h3 {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--asa-accent2) !important;
+  margin: 10px 0 4px !important;
+}
+
+.asa-message-bubble .asa-md-ul {
+  margin: 6px 0 !important;
+  padding-left: 18px !important;
+  list-style: none !important;
+}
+
+.asa-message-bubble .asa-md-ul li::before {
+  content: "▸ " !important;
+  color: var(--asa-accent) !important;
+}
+
+.asa-message-bubble .asa-md-p {
+  margin: 6px 0 !important;
+}
+
+.asa-message-bubble .asa-md-hr {
+  border: none !important;
+  border-top: 1px solid var(--asa-border) !important;
+  margin: 12px 0 !important;
+}
+
+.asa-code-block {
+  background: #010409 !important;
+  border: 1px solid var(--asa-border) !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  overflow-x: auto !important;
+  margin: 10px 0 !important;
+  font-family: var(--asa-mono) !important;
+  font-size: 12px !important;
+  line-height: 1.7 !important;
+  color: #e6edf3 !important;
+}
+
+.asa-inline-code {
+  background: rgba(88,166,255,0.1) !important;
+  border: 1px solid rgba(88,166,255,0.2) !important;
+  border-radius: 4px !important;
+  padding: 1px 5px !important;
+  font-family: var(--asa-mono) !important;
+  font-size: 12px !important;
+  color: var(--asa-accent) !important;
+}
+
+/* ── Input Area ────────────────────────────────────────────── */
+.asa-input-area {
+  padding: 16px !important;
+  background: var(--asa-surface) !important;
+  border-top: 1px solid var(--asa-border) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Button Grid ───────────────────────────────────────────── */
+.asa-btn-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 6px !important;
+}
+
+.asa-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 8px 6px !important;
+  border-radius: 8px !important;
+  font-family: var(--asa-font) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  border: 1px solid transparent !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+  letter-spacing: 0.2px !important;
+}
+
+.asa-btn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.asa-btn-primary {
+  grid-column: span 3 !important;
+  background: linear-gradient(135deg, #1a3a5c, #0d2137) !important;
+  border-color: var(--asa-accent) !important;
+  color: var(--asa-accent) !important;
+  padding: 10px !important;
+  font-size: 12px !important;
+}
+
+.asa-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1f4a7a, #132840) !important;
+  box-shadow: 0 0 16px rgba(88,166,255,0.2) !important;
+}
+
+.asa-btn-hint {
+  background: var(--asa-surface2) !important;
+  border-color: var(--asa-border) !important;
+  color: var(--asa-text-muted) !important;
+}
+
+.asa-btn-hint:hover:not(:disabled) {
+  border-color: var(--asa-accent2) !important;
+  color: var(--asa-accent2) !important;
+  background: rgba(63,185,80,0.08) !important;
+}
+
+.asa-btn-solution {
+  background: rgba(255,123,114,0.1) !important;
+  border-color: rgba(255,123,114,0.3) !important;
+  color: var(--asa-accent4) !important;
+}
+
+.asa-btn-solution:hover:not(:disabled) {
+  background: rgba(255,123,114,0.18) !important;
+  border-color: var(--asa-accent4) !important;
+}
+
+.asa-btn-refresh {
+  background: var(--asa-surface2) !important;
+  border-color: var(--asa-border) !important;
+  color: var(--asa-text-dim) !important;
+}
+
+.asa-btn-refresh:hover:not(:disabled) {
+  color: var(--asa-text-muted) !important;
+  border-color: var(--asa-border) !important;
+}
+
+/* ── Ask Row ───────────────────────────────────────────────── */
+.asa-ask-row {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: flex-end !important;
+}
+
+.asa-question-input {
+  flex: 1 !important;
+  background: var(--asa-surface2) !important;
+  border: 1px solid var(--asa-border) !important;
+  border-radius: 8px !important;
+  color: var(--asa-text) !important;
+  font-family: var(--asa-font) !important;
+  font-size: 13px !important;
+  padding: 10px 12px !important;
+  resize: none !important;
+  outline: none !important;
+  transition: border-color 0.15s !important;
+  line-height: 1.5 !important;
+}
+
+.asa-question-input::placeholder {
+  color: var(--asa-text-dim) !important;
+}
+
+.asa-question-input:focus {
+  border-color: var(--asa-accent) !important;
+  box-shadow: 0 0 0 2px rgba(88,166,255,0.1) !important;
+}
+
+.asa-send-btn {
+  background: var(--asa-accent) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-family: var(--asa-font) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 10px 14px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all 0.15s !important;
+  flex-shrink: 0 !important;
+}
+
+.asa-send-btn:hover:not(:disabled) {
+  background: #79baff !important;
+  box-shadow: 0 0 12px rgba(88,166,255,0.3) !important;
+}
+
+.asa-send-btn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}

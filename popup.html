@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Study Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1f2937;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #f0883e;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --dim: #484f58;
+      --font: 'Syne', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      width: 360px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+    }
+
+    /* Header */
+    .header {
+      padding: 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon { font-size: 28px; filter: drop-shadow(0 0 8px rgba(88,166,255,0.5)); }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    /* Status badge */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--dim);
+    }
+
+    .status-dot.active { background: var(--accent2); box-shadow: 0 0 8px rgba(63,185,80,0.5); }
+    .status-dot.error  { background: #ff7b72; }
+
+    .status-text { font-size: 12px; color: var(--muted); }
+
+    /* Content */
+    .content { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+    /* Section */
+    .section { display: flex; flex-direction: column; gap: 10px; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Input group */
+    .input-group { position: relative; }
+
+    .api-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 10px 40px 10px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .api-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(88,166,255,0.1); }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 2px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1a3a5c, #0d2137);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-primary:hover { background: linear-gradient(135deg, #1f4a7a, #132840); box-shadow: 0 0 16px rgba(88,166,255,0.2); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    .btn-danger {
+      background: rgba(255,123,114,0.1);
+      border-color: rgba(255,123,114,0.3);
+      color: #ff7b72;
+    }
+
+    .btn-danger:hover { background: rgba(255,123,114,0.2); }
+
+    /* Toast */
+    .toast {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .toast.show { display: flex; }
+    .toast.success { background: rgba(63,185,80,0.15); border: 1px solid rgba(63,185,80,0.3); color: var(--accent2); }
+    .toast.error   { background: rgba(255,123,114,0.15); border: 1px solid rgba(255,123,114,0.3); color: #ff7b72; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+    /* Info panel */
+    .info-panel {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .info-step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Divider */
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    /* Footer */
+    .footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-link {
+      font-size: 11px;
+      color: var(--dim);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { color: var(--accent); }
+
+    .version { font-size: 11px; color: var(--dim); font-family: var(--mono); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="logo-icon">⚡</span>
+    <div>
+      <div class="logo-text">CodeSensei</div>
+      <div class="logo-sub">AI Study Assistant v1.0</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-dot" id="status-dot"></div>
+    <span class="status-text" id="status-text">Checking API key…</span>
+  </div>
+
+  <div class="content">
+
+    <!-- API Key Section -->
+    <div class="section">
+      <div class="section-label">🔑 Groq API Key</div>
+      <div class="input-group">
+        <input
+          type="password"
+          id="api-key-input"
+          class="api-input"
+          placeholder="gsk_xxxxxxxxxxxxxxxxxxxx"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="toggle-visibility" id="toggle-visibility" title="Show/hide key">👁</button>
+      </div>
+      <button class="btn btn-primary" id="save-btn">💾 Save API Key</button>
+      <div class="toast" id="toast"></div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- How to get API key -->
+    <div class="section">
+      <div class="section-label">🚀 How to Get a Free API Key</div>
+      <div class="info-panel">
+        <div class="info-step">
+          <div class="info-step-num">1</div>
+          <span>Go to <strong style="color: #e6edf3">console.groq.com</strong> and create a free account</span>
+        </div>
+        <div class="info-step">
+          <div class="info-step-num">2</div>
+          <span>Click <strong style="color: #e6edf3">API Keys</strong> in the sidebar</span>
+        </div>
+        <div class="info-step">
+          <div class="info-step-num">3</div>
+          <span>Click <strong style="color: #e6edf3">Create API Key</strong> and copy it</span>
+        </div>
+        <div class="info-step">
+          <div class="info-step-num">4</div>
+          <span>Paste it above and save. Free tier is generous!</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Quick Actions -->
+    <div class="section">
+      <div class="section-label">⚡ Quick Actions</div>
+      <button class="btn btn-secondary" id="open-leetcode-btn">🔗 Open LeetCode Problems</button>
+      <button class="btn btn-danger" id="clear-key-btn">🗑️ Remove API Key</button>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <a class="footer-link" href="https://console.groq.com" target="_blank">console.groq.com ↗</a>
+    <span class="version">v1.0.0</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
